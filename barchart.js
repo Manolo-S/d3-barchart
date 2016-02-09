@@ -8,18 +8,15 @@ var ds; //empty var for dataset (ds)
 
 var parseDate = d3.time.format('%Y-%m-%d').parse;
 
-
-
 var margin = {
-    top: 30,
+    top: 50,
     right: 20,
-    bottom: 30,
+    bottom: 20,
     left: 100
 };
-var width = 700 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;
-console.log('height: ', height);
-console.log('width:', width);
+
+var width = 900 - margin.left - margin.right;
+var height = 550 - margin.top - margin.bottom;
 
 
 function buildLine() {
@@ -70,7 +67,12 @@ function buildLine() {
         })
         .append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "24px")
+        .text("Gross Domestic Product");
 
     svg.selectAll("rect")
         .data(ds)
@@ -103,16 +105,28 @@ function buildLine() {
                 .style("opacity", 0);
         });
 
-
-
     svg.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis);
 
+    
     svg.append('g')
         .attr('class', 'y axis')
         .call(yAxis);
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", margin.left/4)
+        .attr("x", margin.top - (height/5))
+        .style("text-anchor", "end")
+        .text("Gross Domestic Product in billions (US$)");
+
+    d3.select('body').append("h2")
+        .text('Seasonal Adjustment: Seasonally Adjusted Annual Rate');
+
+    d3.select('body').append("p")
+        .text('Notes: A Guide to the National Income and Product Accounts of the United States (NIPA)  http://www.bea.gov/national/pdf/nipaguid.pdf');
 }
 
 d3.json(dataSourceUrl, function(error, data) {
@@ -125,7 +139,5 @@ d3.json(dataSourceUrl, function(error, data) {
         from_date = data.from_date;
         to_date = data.to_date;
     }
-
     buildLine();
-
 });
